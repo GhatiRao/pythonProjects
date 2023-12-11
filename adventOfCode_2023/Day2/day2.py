@@ -35,100 +35,29 @@ Determine which games would have been possible if
 the bag had been loaded with only 12 red cubes, 13 green cubes, and 14 blue cubes.
 What is the sum of the IDs of those games?
 """
-
-
-
-def function(input_string):
-    game_id,  input_string = input_string.split(':')
-    game_id = int(game_id.split(" ")[-1])
-    # print(game_id)
-    input_string = input_string.strip()
-
-    number_of_choices = input_string.split(";")
-    print(number_of_choices)
-
-
-
-
-
-
-
-    # red = 0
-    # blue = 0
-    # green = 0
-    # for choice in number_of_choices:
-    #     cubes_picked = choice.split(",")
-    #     for each_color_cube in cubes_picked:
-    #         each_color_cube = each_color_cube.strip()
-    #         if 'red' in each_color_cube:
-    #             count, color = each_color_cube.split(" ")
-    #             if count > red_target:
-    #                 return 0
-    #         if 'blue' in each_color_cube:
-    #             count, color = each_color_cube.split(" ")
-    #             if count > blue_target:
-    #                 return 0
-    #         if 'green' in each_color_cube:
-    #             count, color = each_color_cube.split(" ")
-    #             if count > green_target:
-    #                 return 0
-    #         return
-    # print(f' {game_id} : red = {red}, blue = {blue}, green : {green}')
-    # print()
-    # if (red <= red_target) and (blue <= blue_target) and (green <= green_target):
-    #     return game_id
-    # else:
-    #     return 0
-#
-# red_target = 12
-# green_target = 13
-# blue_target = 14
-# input_string = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
-#
-# game_id,  input_string = input_string.split(':')
-# game_id = int(game_id.split(" ")[-1])
-# print(game_id)
-# input_string = input_string.strip()
-#
-# number_of_choices = input_string.split("; ")
-# print(number_of_choices)
-#
-# for choice in number_of_choices:
-#     cubes_picked = choice.split(",")
-#     for each_color_cube in cubes_picked:
-#         each_color_cube = each_color_cube.strip()
-#         if 'red' in each_color_cube:
-#             count, color = each_color_cube.split(" ")
-#             if count > red_target:
-#                 return 0
-#
-
-
 from collections import Counter
+from functools import reduce
+from operator import mul, or_
+from itertools import chain
+
 answers = []
 tot_1 = 0
-thres = Counter({"red":12, "green":13, "blue":14})
+tot_2 = 0
+thres = Counter({"red": 12, "green": 13, "blue":14})
+
 
 with open("input.txt", 'r') as filehandle:
     for line in filehandle:
         game_id, draws = line.strip().split(": ")
         game_id = int(game_id.split(" ")[1])
-        draws = [[c.split(" ") for c in d.split(", ")] for d in draws.split("; ")]
-        print(draws)
-        draws = [Counter({c[1]: int(c[0]) for c in d}) for d in draws]
-        print(draws)
+        draws1 = [[c.split(" ") for c in d.split(", ")] for d in draws.split("; ")]
+        print(draws1)
+        answer = list(chain.from_iterable(draws1))
+        print(sorted(answer))
+        draws = [Counter({c[1]: int(c[0]) for c in d}) for d in draws1]
 
         tot_1 += all(d <= thres for d in draws) * game_id
         print(tot_1)
-#
-#         print()
-#
-#
-#         # ans = function(line)
-#         # answers.append(int(ans))
-#
-#
-# print(answers)
-# print(sum(answers))
-
+        tot_2 += reduce(mul, reduce(or_, draws).values())
+        print(tot_2)
 
