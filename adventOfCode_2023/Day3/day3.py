@@ -30,51 +30,38 @@ from pprint import pprint
 from itertools import product
 import re
 
-
-def function(string: str):
-    pprint(string)
-#
-#
-# input_string = ["467..114..",
-#                 "...*......"]
-# ans = product(input_string[0], input_string[1])
-# for e in ans:
-#     print(e)
-#
-# 0/0
-# width = len(input_string[0])-1
-# length = len(input_string)-1
-# print(width)
-# print(length)
-# print(input_string[length][width])
-# for row in input_string:
-#     ans = [int(s) for s in re.findall(r'\b\d+\b', row)]
-#     print(ans)
-#
-
 with open("input.txt", 'r') as filehandle:
     input_text = filehandle.read()
     ans = input_text.splitlines()
 
-
 print(f"input ----\n {ans}")
 
-
-def get_neighbours():
-    pass
-
-
+numbers_considered = []
 for row, line in enumerate(ans):
     for match in re.finditer(r"\d+", line):
-        print(match)
+        """
+        re.finditer is an iterable and consists (match, match start = , match end = , match value = ) 
+        """
         print(int(match.group()))
-        print(match.start(), match.end())
 
-        chosen_cords = [(x_cords, y_cords) for y_cords, x_cords in product(
-            range(row - 1, row + 2), range(match.start()-1, match.end()+2))
-                        if (0 <= x_cords < len(line) and 0 <= y_cords <= len(ans) and
-                            ((y_cords, x_cords) not in product([row], range(match.start(), match.end()+1))))]
+        """
+        Extracts the immediate neighbor of the identified number in the row
+        """
+        neighbor_cords = [(x_cords, y_cords) for y_cords, x_cords in product(
+            range(row - 1, row + 2), range(match.start()-1, match.end()+1))
+                        if (0 <= x_cords < len(line) and 0 <= y_cords < len(ans) and
+                            ((y_cords, x_cords) not in product([row], range(match.start(), match.end()))))]
 
-        pprint(chosen_cords)
-        0/0
+        """
+        Checks if there is an alphanumeric char apart from '*' in the neighbor
+        """
+        if any(not ans[row_neighb][col_neighb].isalnum() and ans[row_neighb][col_neighb] != '.' for
+               col_neighb, row_neighb in neighbor_cords):
+            numbers_considered.append(int(match.group()))
 
+print("------\n")
+pprint(numbers_considered)
+
+
+print("------\n")
+print(sum(numbers_considered))
