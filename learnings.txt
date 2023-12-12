@@ -1,0 +1,7 @@
+
+1. Check if possible with increment values : use a for loop; else can use while condition until you reach
+    the value
+
+2. Use regex !!!! especially for finding certain elements in set of unknowns
+    re.finditer()--> for getting numbers in cluster of strings and get the span of the number as well.
+3. splitlines !!! for splitting the newlines
