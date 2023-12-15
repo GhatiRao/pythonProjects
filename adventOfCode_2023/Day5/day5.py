@@ -36,7 +36,7 @@ Seed number 13 corresponds to soil number 13.
 What is the lowest location number that corresponds to any of the initial seed numbers?
 - Find the closest Location for the input **seeds**
 
-"""
+
 from pprint import pprint as pp
 import re
 from collections import defaultdict
@@ -75,15 +75,54 @@ for seed in seeds:
 
 print(min(new))
 
-0/0
+"""
 
-lowest = min(a)
-initial_new = 0
-while initial_new < lowest:
-    a[initial_new] = initial_new
-    initial_new += 1
 
-pp(a)
+# Instead of 4 initial seeds, there is a [ starting_seed1, range1, starting_seed2, range2.. ]
+# find the nearest 'location' amongst all the input seeds.
+# https://www.youtube.com/watch?v=iqTopXV13LE
+
+
+import re
+with open("input.txt", "r") as file:
+    input_text = file.read()
+_, seeds, *mapping_list = re.split(
+    'seeds: |'
+    '\nseed-to-soil map:\n|'
+    '\nsoil-to-fertilizer map:\n|'
+    '\nfertilizer-to-water map:\n|'
+    '\nwater-to-light map:\n|'
+    '\nlight-to-temperature map:\n|'
+    '\ntemperature-to-humidity map:\n|'
+    '\nhumidity-to-location map:\n', input_text)
+
+
+seeds = [int(x) for x in seeds.split(' ')]
+# This is the list[(val1, val2)]; val1 = original seed, val2 = end of range seed
+min_max_seeds = list(map(lambda x: (x[0], x[0]+x[1]), zip(seeds[::2], seeds[1::2])))
+print(min_max_seeds)
+
+
+def fun(seed: str, min_val_seed, max_val_seed, map_data: str):
+    for line in map_data.splitlines():
+        soil_dest, seed_source, range_incl = [int(x) for x in line.split(' ')]
+        seed_final = [seed_source, seed_source + range_incl] # 98, 99
+
+
+
+        if source <= seed < source+range_incl:
+            return destination + seed - source
+    return seed
+
+
+for min_seed, max_seed in min_max_seeds:
+
+    for items in mapping_list:
+        link_found = fun(local, min_seed, max_seed, items)
+        local = link_found
+    new.append(local)
+
+print(min(new))
 
 
 
