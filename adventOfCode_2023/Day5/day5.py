@@ -116,7 +116,6 @@ def fun(seed: str, min_val_seed, max_val_seed, map_data: str):
 
 
 for min_seed, max_seed in min_max_seeds:
-
     for items in mapping_list:
         link_found = fun(local, min_seed, max_seed, items)
         local = link_found
